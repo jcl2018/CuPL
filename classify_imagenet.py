@@ -1,13 +1,7 @@
-import numpy as np
 import torch
 import clip
-from pkg_resources import packaging
 from imagenet_prompts.standard_image_prompts import imagenet_templates
-import pdb
-from collections import defaultdict
 from imagenetdataset import ImagenetDataset
-from PIL import Image
-import PIL
 import json
 from tqdm import tqdm
 

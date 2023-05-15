@@ -1,0 +1,93 @@
+1. Removed clip==1.0 from requirements.txt. Then open PyCharm and it will let you create a new virtualenv using requirements.txt
+2. pip install git+https://github.com/openai/CLIP.git
+3. SSL error in clip.load(),
+    urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)>
+
+    The error message you're seeing (`urllib.error.URLError: <urlopen error [SSL: CERTIFICATE_VERIFY_FAILED] certificate verify failed: unable to get local issuer certificate (_ssl.c:1129)>`) is usually caused by a missing or outdated SSL certificate on your system.
+
+    Here's how you can fix it:
+
+    1. Open a terminal window and run the following command to download the latest version of the `certifi` package:
+
+       ```
+       python3 -m pip install --upgrade certifi
+       ```
+
+    2. Once the `certifi` package is installed, run the following command to locate its certificate directory:
+
+       ```
+       python3 -m certifi
+       ```
+
+       This will print the path to the certificate directory, which should look something like `/path/to/certifi/cacert.pem`.
+
+    3. Set the `SSL_CERT_FILE` environment variable to the path of the `cacert.pem` file you just located, by running the following command:
+
+       ```
+       export SSL_CERT_FILE=/path/to/certifi/cacert.pem
+       ```
+
+       Replace `/path/to/certifi/cacert.pem` with the actual path you obtained in step 2.
+
+    4. Try running your Python script again. The `SSL_CERT_FILE` environment variable should tell Python where to find the SSL certificate it needs to verify the SSL connection.
+
+    If you still encounter the same error, try restarting your terminal or command prompt window and running the commands again. If the problem persists, there may be a deeper issue with your system's SSL configuration that requires further troubleshooting.
+
+Now you should be able to do clip.load() :) in classify_imagenet.py
+
+4. Download ImageNet dataset
+
+    The ImageNet dataset is a large dataset of labeled images, and it can be downloaded from the official website: http://www.image-net.org/. However, to access and download the dataset, you need to register an account and agree to the terms of use.
+
+    Here are the steps to download the ImageNet dataset:
+
+    1. Go to the ImageNet website (http://www.image-net.org/) and click on the "Download" link on the top menu bar.
+
+    2. Click on the "Download Image URLs" link to download a text file containing URLs for all the images in the dataset.
+
+    3. Click on the "WordNet ID mapping" link to download a text file containing a mapping between WordNet IDs and ImageNet synsets.
+
+    4. If you plan to use the full dataset, you will need to request access to the ImageNet dataset by filling out a registration form and agreeing to the terms of use.
+
+    5. Once you have access to the dataset, you can download the images in JPEG format from the ImageNet servers using a download manager such as `wget` or `curl`. Here is an example command to download the first 1000 images of the "n02119789" synset (i.e., "kit fox"):
+
+    ```
+    wget -c -t 0 http://www.image-net.org/data/urls/imagenet_fall11_urls.tgz
+    tar -xzvf imagenet_fall11_urls.tgz
+    grep n02119789 imagenet_fall11_urls.txt | head -n 1000 > kitfox_urls.txt
+    mkdir kitfox
+    cd kitfox
+    wget -i ../kitfox_urls.txt
+    ```
+
+    This command downloads the `imagenet_fall11_urls.tgz` file containing the URLs of all the images, extracts the URLs for the "kit fox" synset, creates a directory to store the downloaded images, and downloads the first 1000 images for the "kit fox" synset.
+
+    Note that downloading the ImageNet dataset can take a significant amount of time and bandwidth, as the dataset contains millions of images. It is also recommended to use a download manager to ensure that the download process is reliable and can be resumed if interrupted.
+
+
+5. About openai API key
+    To get an OpenAI API key, follow these steps:
+
+    1. Go to the OpenAI website at https://openai.com/ and click the "Get started for free" button in the top-right corner of the page.
+
+    2. Sign up for an account by entering your email address and choosing a password, or by using your Google account.
+
+    3. Once you've signed up, you'll be prompted to create an organization or join an existing one. If you're not part of an organization, you can create a new one with a name and description.
+
+    4. Once you've created or joined an organization, you can access the OpenAI API dashboard by clicking the "API" link in the top navigation bar.
+
+    5. On the API dashboard, you can create an API key by clicking the "Create API Key" button. Give your API key a name and choose the permissions that it should have.
+
+    6. Once you've created your API key, it will be displayed on the dashboard along with its secret. Make sure to copy the secret and store it securely, as you won't be able to view it again later.
+
+    That's it! You can now use your OpenAI API key to access the GPT-3 language model and other OpenAI API services. To use your API key in your Python code, you can set the `openai.api_key` variable to the value of your key, like this:
+
+    ```python
+    import openai
+    openai.api_key = "YOUR_API_KEY"
+    ```
+
+    Replace "YOUR_API_KEY" with the actual value of your API key.
+
+Then you can try my test script (test_openai_prompt.py)
+

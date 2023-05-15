@@ -1,17 +1,11 @@
-import pathlib
-import tarfile
-import requests
-import shutil
+
 from collections import defaultdict
 
 from PIL import Image
-from tqdm import tqdm
-from torch.utils.data import Dataset, DataLoader
-from torchvision.datasets import ImageFolder
+from torch.utils.data import Dataset
 import os
 from imagenet_classnames.sense_to_idx import sense
 from imagenet_classnames.imagenet_classes import imagenet_classes
-import pdb
 
 
 class ImagenetDataset(Dataset):
