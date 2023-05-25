@@ -91,3 +91,45 @@ Now you should be able to do clip.load() :) in classify_imagenet.py
 
 Then you can try my test script (test_openai_prompt.py)
 
+
+6. About multi-workers error (pytorch dataloader)
+
+    I apologize for the confusion. If you encounter the error message "An attempt has been made to start a new process before the current process has finished its bootstrapping phase" specifically in PyTorch when using multiple workers with the `DataLoader`, you can try the following steps to resolve the issue:
+
+    1. Ensure `num_workers` is set to a valid value: When using multiple workers, make sure the `num_workers` parameter in the `DataLoader` is set to a positive integer. For example, `num_workers=2` to use two worker processes.
+
+    2. Move the code into a `main` function: Wrap your code inside a `main` function and then use the `if __name__ == '__main__':` check before creating the `DataLoader` instance. This can help avoid issues related to spawning multiple processes.
+
+    ```python
+    import torch
+    from torch.utils.data import DataLoader
+
+    def main():
+        # Your code here
+        dataset = MyDataset(...)
+        dataloader = DataLoader(dataset, batch_size=32, num_workers=2)
+        # ...
+
+    if __name__ == '__main__':
+        main()
+    ```
+
+    3. Set `spawn` as the multiprocessing start method: Before creating the `DataLoader`, set the multiprocessing start method to `'spawn'` to ensure proper initialization of processes. You can use `torch.multiprocessing.set_start_method('spawn')` to set the start method.
+
+    ```python
+    import torch
+    from torch.utils.data import DataLoader
+
+    def main():
+        # Your code here
+        dataset = MyDataset(...)
+        torch.multiprocessing.set_start_method('spawn')
+        dataloader = DataLoader(dataset, batch_size=32, num_workers=2)
+        # ...
+
+    if __name__ == '__main__':
+        main()
+    ```
+
+    By following these steps, you should be able to resolve the specific error related to using multiple workers in PyTorch's `DataLoader`. If the issue persists, please provide additional details or error traceback for further assistance.
+
